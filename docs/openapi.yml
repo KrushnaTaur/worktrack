@@ -1,0 +1,1538 @@
+openapi: 3.0.3
+info:
+  title: WorkTrack API
+  version: 1.0.0
+  description: Employee & Leave Management System
+paths:
+  /api/auth/change-password/:
+    post:
+      operationId: auth_change_password_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+          description: ''
+  /api/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Logout'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Logout'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Logout'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/auth/me/:
+    get:
+      operationId: auth_me_retrieve
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/auth/refresh/:
+    post:
+      operationId: auth_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/dashboard/:
+    get:
+      operationId: dashboard_retrieve
+      tags:
+      - dashboard
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/departments/:
+    get:
+      operationId: departments_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - departments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDepartmentList'
+          description: ''
+    post:
+      operationId: departments_create
+      tags:
+      - departments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Department'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Department'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Department'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+          description: ''
+  /api/departments/{id}/:
+    get:
+      operationId: departments_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this department.
+        required: true
+      tags:
+      - departments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+          description: ''
+    put:
+      operationId: departments_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this department.
+        required: true
+      tags:
+      - departments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Department'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Department'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Department'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+          description: ''
+    patch:
+      operationId: departments_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this department.
+        required: true
+      tags:
+      - departments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDepartment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDepartment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDepartment'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+          description: ''
+    delete:
+      operationId: departments_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this department.
+        required: true
+      tags:
+      - departments
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/employees/:
+    get:
+      operationId: employees_list
+      description: Admins manage everyone; employees can only see their own profile.
+      parameters:
+      - in: query
+        name: department
+        schema:
+          type: integer
+      - in: query
+        name: is_active
+        schema:
+          type: boolean
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - employees
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEmployeeList'
+          description: ''
+    post:
+      operationId: employees_create
+      description: Admins manage everyone; employees can only see their own profile.
+      tags:
+      - employees
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Employee'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+          description: ''
+  /api/employees/{id}/:
+    get:
+      operationId: employees_retrieve
+      description: Admins manage everyone; employees can only see their own profile.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this employee profile.
+        required: true
+      tags:
+      - employees
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+          description: ''
+    put:
+      operationId: employees_update
+      description: Admins manage everyone; employees can only see their own profile.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this employee profile.
+        required: true
+      tags:
+      - employees
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Employee'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+          description: ''
+    patch:
+      operationId: employees_partial_update
+      description: Admins manage everyone; employees can only see their own profile.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this employee profile.
+        required: true
+      tags:
+      - employees
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedEmployee'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedEmployee'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedEmployee'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+          description: ''
+    delete:
+      operationId: employees_destroy
+      description: Admins manage everyone; employees can only see their own profile.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this employee profile.
+        required: true
+      tags:
+      - employees
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/employees/me/:
+    get:
+      operationId: employees_me_retrieve
+      description: Admins manage everyone; employees can only see their own profile.
+      tags:
+      - employees
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+          description: ''
+  /api/leave-balances/:
+    get:
+      operationId: leave_balances_list
+      description: Everyone reads their own balances; admins read all and may adjust
+        total_days.
+      parameters:
+      - in: query
+        name: leave_type
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: user
+        schema:
+          type: integer
+      - in: query
+        name: year
+        schema:
+          type: integer
+      tags:
+      - leave-balances
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLeaveBalanceList'
+          description: ''
+  /api/leave-balances/{id}/:
+    get:
+      operationId: leave_balances_retrieve
+      description: Everyone reads their own balances; admins read all and may adjust
+        total_days.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this leave balance.
+        required: true
+      tags:
+      - leave-balances
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveBalance'
+          description: ''
+    patch:
+      operationId: leave_balances_partial_update
+      description: Everyone reads their own balances; admins read all and may adjust
+        total_days.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this leave balance.
+        required: true
+      tags:
+      - leave-balances
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLeaveBalance'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedLeaveBalance'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedLeaveBalance'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveBalance'
+          description: ''
+  /api/leave-requests/:
+    get:
+      operationId: leave_requests_list
+      parameters:
+      - in: query
+        name: department
+        schema:
+          type: number
+      - in: query
+        name: employee
+        schema:
+          type: integer
+      - in: query
+        name: leave_type
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: start_from
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: start_to
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - APPROVED
+          - CANCELLED
+          - PENDING
+          - REJECTED
+        description: |-
+          * `PENDING` - Pending
+          * `APPROVED` - Approved
+          * `REJECTED` - Rejected
+          * `CANCELLED` - Cancelled
+      tags:
+      - leave-requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLeaveRequestList'
+          description: ''
+    post:
+      operationId: leave_requests_create
+      tags:
+      - leave-requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LeaveRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LeaveRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveRequest'
+          description: ''
+  /api/leave-requests/{id}/:
+    get:
+      operationId: leave_requests_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this leave request.
+        required: true
+      tags:
+      - leave-requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveRequest'
+          description: ''
+  /api/leave-requests/{id}/approve/:
+    post:
+      operationId: leave_requests_approve_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this leave request.
+        required: true
+      tags:
+      - leave-requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Review'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Review'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveRequest'
+          description: ''
+  /api/leave-requests/{id}/cancel/:
+    post:
+      operationId: leave_requests_cancel_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this leave request.
+        required: true
+      tags:
+      - leave-requests
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveRequest'
+          description: ''
+  /api/leave-requests/{id}/reject/:
+    post:
+      operationId: leave_requests_reject_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this leave request.
+        required: true
+      tags:
+      - leave-requests
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reject'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Reject'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Reject'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveRequest'
+          description: ''
+  /api/leave-types/:
+    get:
+      operationId: leave_types_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - leave-types
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLeaveTypeList'
+          description: ''
+    post:
+      operationId: leave_types_create
+      tags:
+      - leave-types
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LeaveType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LeaveType'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveType'
+          description: ''
+  /api/leave-types/{id}/:
+    get:
+      operationId: leave_types_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this leave type.
+        required: true
+      tags:
+      - leave-types
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveType'
+          description: ''
+    put:
+      operationId: leave_types_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this leave type.
+        required: true
+      tags:
+      - leave-types
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LeaveType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LeaveType'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveType'
+          description: ''
+    patch:
+      operationId: leave_types_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this leave type.
+        required: true
+      tags:
+      - leave-types
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLeaveType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedLeaveType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedLeaveType'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveType'
+          description: ''
+    delete:
+      operationId: leave_types_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this leave type.
+        required: true
+      tags:
+      - leave-types
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    ChangePassword:
+      type: object
+      properties:
+        old_password:
+          type: string
+          writeOnly: true
+        new_password:
+          type: string
+          writeOnly: true
+      required:
+      - new_password
+      - old_password
+    Department:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 255
+        employee_count:
+          type: integer
+          readOnly: true
+      required:
+      - employee_count
+      - id
+      - name
+    Employee:
+      type: object
+      description: One serializer that reads/writes the profile and its linked user.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user_id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        full_name:
+          type: string
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+        is_active:
+          type: boolean
+        department:
+          type: integer
+        department_name:
+          type: string
+          readOnly: true
+        employee_code:
+          type: string
+          maxLength: 20
+        job_title:
+          type: string
+          maxLength: 100
+        phone:
+          oneOf:
+          - type: string
+            pattern: ^\+?[0-9 \-]{7,20}$
+            maxLength: 20
+          - type: string
+            maxLength: 0
+        joined_on:
+          type: string
+          format: date
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - department
+      - department_name
+      - email
+      - employee_code
+      - first_name
+      - full_name
+      - id
+      - job_title
+      - joined_on
+      - last_name
+      - user_id
+      - username
+    LeaveBalance:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+          readOnly: true
+        user_name:
+          type: string
+          readOnly: true
+        leave_type:
+          type: integer
+          readOnly: true
+        leave_type_name:
+          type: string
+          readOnly: true
+        year:
+          type: integer
+          readOnly: true
+        total_days:
+          type: integer
+          maximum: 365
+          minimum: 0
+        used_days:
+          type: integer
+          readOnly: true
+        remaining_days:
+          type: integer
+          readOnly: true
+      required:
+      - id
+      - leave_type
+      - leave_type_name
+      - remaining_days
+      - total_days
+      - used_days
+      - user
+      - user_name
+      - year
+    LeaveRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        employee:
+          type: integer
+          readOnly: true
+        employee_name:
+          type: string
+          readOnly: true
+        leave_type:
+          type: integer
+        leave_type_name:
+          type: string
+          readOnly: true
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        days:
+          type: integer
+          readOnly: true
+        reason:
+          type: string
+          maxLength: 500
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+        reviewed_by:
+          type: integer
+          readOnly: true
+          nullable: true
+        reviewed_by_name:
+          type: string
+          nullable: true
+          readOnly: true
+        review_comment:
+          type: string
+          readOnly: true
+        reviewed_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - days
+      - employee
+      - employee_name
+      - end_date
+      - id
+      - leave_type
+      - leave_type_name
+      - reason
+      - review_comment
+      - reviewed_at
+      - reviewed_by
+      - reviewed_by_name
+      - start_date
+      - status
+    LeaveType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        default_days:
+          type: integer
+          maximum: 365
+          minimum: 0
+      required:
+      - default_days
+      - id
+      - name
+    Login:
+      type: object
+      description: Standard JWT login that also returns the user and puts the role
+        in the token.
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    Logout:
+      type: object
+      properties:
+        refresh:
+          type: string
+      required:
+      - refresh
+    PaginatedDepartmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Department'
+    PaginatedEmployeeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'
+    PaginatedLeaveBalanceList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeaveBalance'
+    PaginatedLeaveRequestList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeaveRequest'
+    PaginatedLeaveTypeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeaveType'
+    PatchedDepartment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 255
+        employee_count:
+          type: integer
+          readOnly: true
+    PatchedEmployee:
+      type: object
+      description: One serializer that reads/writes the profile and its linked user.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user_id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        full_name:
+          type: string
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+        is_active:
+          type: boolean
+        department:
+          type: integer
+        department_name:
+          type: string
+          readOnly: true
+        employee_code:
+          type: string
+          maxLength: 20
+        job_title:
+          type: string
+          maxLength: 100
+        phone:
+          oneOf:
+          - type: string
+            pattern: ^\+?[0-9 \-]{7,20}$
+            maxLength: 20
+          - type: string
+            maxLength: 0
+        joined_on:
+          type: string
+          format: date
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedLeaveBalance:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+          readOnly: true
+        user_name:
+          type: string
+          readOnly: true
+        leave_type:
+          type: integer
+          readOnly: true
+        leave_type_name:
+          type: string
+          readOnly: true
+        year:
+          type: integer
+          readOnly: true
+        total_days:
+          type: integer
+          maximum: 365
+          minimum: 0
+        used_days:
+          type: integer
+          readOnly: true
+        remaining_days:
+          type: integer
+          readOnly: true
+    PatchedLeaveType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        default_days:
+          type: integer
+          maximum: 365
+          minimum: 0
+    Reject:
+      type: object
+      properties:
+        comment:
+          type: string
+          maxLength: 255
+      required:
+      - comment
+    Review:
+      type: object
+      properties:
+        comment:
+          type: string
+          default: ''
+          maxLength: 255
+    RoleEnum:
+      enum:
+      - ADMIN
+      - EMPLOYEE
+      type: string
+      description: |-
+        * `ADMIN` - Admin
+        * `EMPLOYEE` - Employee
+    StatusEnum:
+      enum:
+      - PENDING
+      - APPROVED
+      - REJECTED
+      - CANCELLED
+      type: string
+      description: |-
+        * `PENDING` - Pending
+        * `APPROVED` - Approved
+        * `REJECTED` - Rejected
+        * `CANCELLED` - Cancelled
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+        email:
+          type: string
+          format: email
+          readOnly: true
+        first_name:
+          type: string
+          readOnly: true
+        last_name:
+          type: string
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        role:
+          allOf:
+          - $ref: '#/components/schemas/RoleEnum'
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - full_name
+      - id
+      - last_name
+      - role
+      - username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
